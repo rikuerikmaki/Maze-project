@@ -4,8 +4,8 @@ import queue
 def createMaze():
     maze = []
     maze.append(["#","#", "#", "#", "#", "#","#"])
-    maze.append(["#"," ", "E", " ", "#", " ","#"])
-    maze.append(["#"," ", "#", " ", "#", " ","#"])
+    maze.append(["#"," ", " ", " ", "#", " ","#"])
+    maze.append(["#"," ", "#", "E", "#", " ","#"])
     maze.append(["#"," ", "#", " ", " ", " ","#"])
     maze.append(["#"," ", "#", "#", "#", " ","#"])
     maze.append(["#"," ", " ", " ", "#", " ","#"])
@@ -39,13 +39,14 @@ def createMaze3():
 
 def printMaze(maze, path=""):
 
-    for c in range(len(maze) - 1):
-        for x, pos in enumerate(maze[c]):
+    for r in range(len(maze) - 1):
+        for x, pos in enumerate(maze[r]):
             if pos == "E":
-                start = x
+                start_x = x
+                start_y = r
 
-    i = start
-    j = c
+    i = start_x
+    j = start_y
     pos = set()
     for move in path:
         if move == "L":
@@ -72,12 +73,14 @@ def printMaze(maze, path=""):
 
 
 def valid(maze, moves):
-    for x, pos in enumerate(maze[0]):
-        if pos == "E":
-            start = x
+    for r in range(len(maze) - 1):
+        for x, pos in enumerate(maze[r]):
+            if pos == "E":
+                start_x = x
+                start_y = r
 
-    i = start
-    j = 0
+    i = start_x
+    j = start_y
     for move in moves:
         if move == "L":
             i -= 1
@@ -100,12 +103,15 @@ def valid(maze, moves):
 
 
 def findEnd(maze, moves):
-    for x, pos in enumerate(maze[0]):
-        if pos == "E":
-            start = x
+    
+    for r in range(len(maze) - 1):
+        for x, pos in enumerate(maze[r]):
+            if pos == "E":
+                start_x = x
+                start_y = r
 
-    i = start
-    j = 0
+    i = start_x
+    j = start_y
     for move in moves:
         if move == "L":
             i -= 1
