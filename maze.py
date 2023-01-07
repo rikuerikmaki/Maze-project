@@ -24,6 +24,10 @@ class Maze:
         self.thickness = 1
         self.cell_w = math.floor((self.width - self.edge) / len(self.horizontalWalls[0]))
         self.cell_h = math.floor((self.height - self.edge) / len(self.verticalWalls))
+        self.start = [0,0]
+
+    def get_start(self):
+        return self.start
 
     def hasVerticalWall(self, row, column):
         return self.verticalWalls[row][column]
@@ -222,7 +226,7 @@ class Maze:
 
     def main(self):
         maze.draw()
-        maze.create_mouse([0, 0], [5, 5], 1)
+        maze.create_mouse(self.start, [5, 5], 1)
         print(self.horizontalWalls)
         print(self.verticalWalls)
         print(self.hasWall(0, 0, "Up"))
