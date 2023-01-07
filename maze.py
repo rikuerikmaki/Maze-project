@@ -33,9 +33,19 @@ class Maze:
 
     def hasWall(self, row, column, direction):
         if direction == "Up":
-            return self.horizontalWalls[row + 1][column]
+            return self.horizontalWalls[row+1][column]
         if direction == "Down":
             return self.horizontalWalls[row][column]
+        if direction == "Left":
+            return self.verticalWalls[row][column]
+        if direction == "Right":
+            return self.verticalWalls[row][column + 1]
+
+    def hasWall2(self, row, column, direction):
+        if direction == "Up":
+            return self.horizontalWalls[row][column]
+        if direction == "Down":
+            return self.horizontalWalls[row+1][column]
         if direction == "Left":
             return self.verticalWalls[row][column]
         if direction == "Right":
@@ -172,7 +182,7 @@ class Maze:
 
     def draw_mice(self, color):
         for mouse in self.mice:
-            x1, y1 = (mouse[0][0] * self.cell_w + self.edge/2 + 2 + mouse[1][0], mouse[0][1] * self.cell_h + self.edge/2 + 2 + mouse[1][1])
+            x1, y1 = (mouse[0][0] * self.cell_w + self.edge/2 + mouse[1][0], mouse[0][1] * self.cell_h + self.edge/2 + mouse[1][1])
             x2, y2 = (x1 + self.cell_w / 10, y1 + self.cell_h / 10)
             self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
 
@@ -182,55 +192,60 @@ class Maze:
         for index, mouse in enumerate(self.mice):
             moves = ["N", "E", "S", "W"]
             move = random.choice(moves)
-            print(mouse, self.cell_w, self.cell_h)
-            if move == "N" and mouse[1][1] != 0:
-                self.mice[index][1][1] -= 1
+            print(mouse)
+            pos_y = mouse[0][0]
+            pos_x = mouse[0][1]
+            #print(self.hasWall2(pos_x, pos_y, "Up"), "Up")
+            #print(self.hasWall2(pos_x, pos_y, "Left"), "Left")
+            #print(self.hasWall2(pos_x, pos_y, "Down"), "Down")
+            #print(self.hasWall2(pos_x, pos_y, "Right"), "Right")
 
-            elif move == "N" and mouse[1][1] == 0 and not self.hasWall(mouse[0][0], mouse[0][1], "Up"):
-                print("hello1")
+            if move == "N" and mouse[1][1] != 0:
+                if not self.hasWall2(pos_x, pos_y, "Up") or mouse[1][1] != 1:
+                    self.mice[index][1][1] -= 1
+
+            elif move == "N" and mouse[1][1] == 0 and not self.hasWall2(pos_x, pos_y, "Up"):
                 self.mice[index][0][1] -= 1
                 self.mice[index][1][1] = self.cell_h - 1
 
-            if move == "E" and mouse[1][0] != self.rows -1:
-                self.mice[index][1][0] += 1
+            if move == "E" and mouse[1][0] != self.cell_w -1:
+                if not self.hasWall2(pos_x, pos_y, "Right") or mouse[1][0] != self.cell_w - 2:
+                    self.mice[index][1][0] += 1
 
-            elif move == "E" and mouse[1][0] == self.rows -1 and not self.hasWall(mouse[0][0], mouse[0][1], "Right"):
-                print("hell2")
+            elif move == "E" and mouse[1][0] == self.cell_w -1 and not self.hasWall2(pos_x, pos_y, "Right"):
                 self.mice[index][0][0] += 1
                 self.mice[index][1][0] = 0
 
-            if move == "S" and mouse[1][1] != self.rows -1:
-                self.mice[index][1][1] += 1
+            if move == "S" and mouse[1][1] != self.cell_h -1:
+                if not self.hasWall2(pos_x, pos_y, "Down") or mouse[1][1] != self.cell_h - 2:
+                    self.mice[index][1][1] += 1
 
-            elif move == "S" and mouse[1][1] == self.rows -1 and not self.hasWall(mouse[0][0], mouse[0][1], "Down"):
-                print("hello3")
+            elif move == "S" and mouse[1][1] == self.cell_h -1 and not self.hasWall2(pos_x, pos_y, "Down"):
+                print("hellosss")
                 self.mice[index][0][1] += 1
                 self.mice[index][1][1] = 0
 
             if move == "W" and mouse[1][0] != 0:
-                self.mice[index][1][0] -= 1
+                if not self.hasWall2(pos_x, pos_y, "Left") or mouse[1][0] != 1:
+                    self.mice[index][1][0] -= 1
 
-            elif move == "W" and mouse[1][0] == 0 and not self.hasWall(mouse[0][0], mouse[0][1], "Left"):
-                print("hello4")
+            elif move == "W" and mouse[1][0] == 0 and not self.hasWall2(pos_x, pos_y, "Left"):
                 self.mice[index][0][0] -= 1
                 self.mice[index][1][0] = self.cell_w - 1
         self.draw_mice("green")
         if finnish == False:
-            self.root.after(50, self.move_mice)
+            self.root.after(10, self.move_mice)
+
 
 
 
     def main(self):
         maze.draw()
         maze.create_mouse([0, 0], [5, 5], 1)
-        print(self.horizontalWalls)
-        print(self.verticalWalls)
-        print(self.hasWall(0, 0, "Up"))
-        print(self.hasWall(0, 0, "Left"))
-        print(self.hasWall(0, 0, "Down"))
-        print(self.hasWall(0, 0, "Right"))
+        print(self.horizontalWalls[0:4])
+        print(self.verticalWalls[0:4])
         maze.draw_mice("green")
-        #maze.move_mice()
+        maze.move_mice()
         #print(maze.show())
         self.root.mainloop()
 
