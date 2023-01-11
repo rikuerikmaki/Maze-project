@@ -1,73 +1,80 @@
 import queue
-import maze
-
-def valid(maze, moves):
-    for x, pos in enumerate(maze[0]):
-        if pos == True:
-            start_x = x
-            start_y = 0
-
-    i = start_x
-    j = start_y
-    for move in moves:
-        if move == "W":
-            i -= 1
-
-        elif move == "E":
-            i += 1
-
-        elif move == "N":
-            j -= 1
-
-        elif move == "S":
-            j += 1
-
-        if not(0 <= i < len(maze[0]) and 0 <= j < len(maze)):
-            return False
-        elif (maze.checkCell(j, i) == False):
-            return False
-
-    return True
+import numpy as np
+import random
 
 
-def findEnd(maze, moves):
-    
-    for r in range(len(maze) - 1):
-        for x, pos in enumerate(maze[r]):
-            if pos == True:
-                start_x = x
-                start_y = r
+def get_neighbors(i, j, rows, columns):
 
-    i = start_x
-    j = start_y
-    for move in moves:
-        if move == "W":
-            i -= 1
+    arr = []
+    if i != 0:
+        arr.append([i - 1, j])
+    if i < rows:
+        arr.append([i + 1, j])
+    if j != 0:
+        arr.append([i, j - 1])
+    if j < columns:
+        arr.append([i, j + 1])
+    random.shuffle(arr)
+    return arr
 
-        elif move == "E":
-            i += 1
 
-        elif move == "N":
-            j -= 1
+def findPath(maze, start):
+    q = []
+    q.append(start)
+    #all_nodes = maze.get_rows() * maze.get_columns()
+    rows = maze.get_rows()
+    columns = maze.get_columns()
+    #visited = np.full(maze.get_rows(), maze.get_columns(), False)
+    visited = []
+    for i in range(rows):
+        hold = []
+        for j in range(columns):
+            hold.append(False)
+        visited.append(hold)
 
-        elif move == "S":
-            j += 1
+    visited[start[0]][start[1]] = True
+    prev = []
+    for i in range(rows):
+        hold = []
+        for j in range(columns):
+            hold.append([i, j])
+        prev.append(hold)
+            
+        
+     #prev tulis alustaa niin, että siinä on kaikki mazen nodet
+    #indexes = list(range(0, all_nodes))
+    #hash = {k:v for k, v in zip(prev, indexes)}
 
-    if maze[j][i] == "M":
-        print("Found: " + moves)
-        return True
 
-    return False
+    while not len(q) == 0:
+        node = q.pop()
+        neighours = get_neighbors(node[0], node[1], rows, columns)
+        direction = ""
+        for next in neighours:
+            if node[0] - next[0] == -1:
+                direction = "Left"
+            if node[0] - next[0] == 1:
+                direction = "Right"
+            if node[1] - next[1] == -1:
+                direction = "Up"
+            if node[1] - next[1] == 1:
+                direction = "Down"
+            if not maze.hasWall2(next[1], next[0], direction): #ehkä pitää vaihtaa indexit ristiin
+                if not visited[next[0]][next[1]]:
+                    visited[next[0]][next[1]] = True
+                    q.append(next)
+                    prev[next[0]][next[1]] = node
+    return prev
 
-nums = queue.Queue()
-nums.put("")
-add = ""
-maze = maze.Maze(40, 40, 1000, 1000)
 
-while not findEnd(maze, add): 
-    add = nums.get()
-    #print(add)
-    for j in ["W", "E", "N", "S"]:
-        put = add + j
-        if valid(maze, put):
-            nums.put(put)
+def create_path(start, end, maze):
+    parents = findPath(maze, start)
+    path = []
+    node = end
+    while node != start:
+        path.append(node)
+        node = parents[node[0]][node[1]]
+    path.append([0,0])
+    print(path)
+    return path
+        

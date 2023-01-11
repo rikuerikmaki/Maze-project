@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import math
+import findPath as fp
 from tkinter import Tk, Canvas
 
 
@@ -17,7 +18,7 @@ class Maze:
         self.horizontalWalls = np.full((rows + 1, columns), True)
         self.verticalWalls = np.full((rows, columns + 1), True)
         #self.horizontalWalls[0][0] = False
-        self.horizontalWalls[rows][columns - 1] = False
+        #self.horizontalWalls[rows][columns - 1] = False
         self.maze = self.generate(None)
         self.edge = self.width / 5
         self.mice = []
@@ -25,9 +26,19 @@ class Maze:
         self.cell_w = math.floor((self.width - self.edge) / len(self.horizontalWalls[0]))
         self.cell_h = math.floor((self.height - self.edge) / len(self.verticalWalls))
         self.start = [0,0]
+        self.end = [self.rows - 1, self.columns - 1]
 
     def get_start(self):
         return self.start
+
+    def get_end(self):
+        return self.end
+
+    def get_rows(self):
+        return self.rows
+
+    def get_columns(self):
+        return self.columns
 
     def hasVerticalWall(self, row, column):
         return self.verticalWalls[row][column]
@@ -40,6 +51,16 @@ class Maze:
             return self.horizontalWalls[row + 1][column]
         if direction == "Down":
             return self.horizontalWalls[row][column]
+        if direction == "Left":
+            return self.verticalWalls[row][column]
+        if direction == "Right":
+            return self.verticalWalls[row][column + 1]
+
+    def hasWall2(self, row, column, direction):
+        if direction == "Up":
+            return self.horizontalWalls[row][column]
+        if direction == "Down":
+            return self.horizontalWalls[row + 1][column]
         if direction == "Left":
             return self.verticalWalls[row][column]
         if direction == "Right":
@@ -223,6 +244,15 @@ class Maze:
             self.root.after(50, self.move_mice)
 
 
+    def draw_path(self, path, color):
+        for step in path:
+
+
+            x1, y1 = (step[0] * self.cell_w + self.edge / 2 + self.cell_w / 3, step[1] * self.cell_h + self.edge / 2 + self.cell_h / 3)
+            x2, y2 = (x1 + self.cell_w / 3, y1 + self.cell_h / 3)
+            self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
+
+
 
     def main(self):
         maze.draw()
@@ -234,11 +264,14 @@ class Maze:
         print(self.hasWall(0, 0, "Down"))
         print(self.hasWall(0, 0, "Right"))
         maze.draw_mice("green")
+        result = fp.create_path(self.start, self.end, maze)
+        self.draw_path(result, "Blue")
+        print(len(result))
         #maze.move_mice()
         #print(maze.show())
         self.root.mainloop()
 
-maze = Maze(40, 40, 1000, 1000)
+maze = Maze(100, 100, 1000, 1000)
 maze.main()
 
 
