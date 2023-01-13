@@ -246,8 +246,6 @@ class Maze:
 
     def draw_path(self, path, color):
         for step in path:
-
-
             x1, y1 = (step[0] * self.cell_w + self.edge / 2 + self.cell_w / 3, step[1] * self.cell_h + self.edge / 2 + self.cell_h / 3)
             x2, y2 = (x1 + self.cell_w / 3, y1 + self.cell_h / 3)
             self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
@@ -271,7 +269,7 @@ class Maze:
         #print(maze.show())
         self.root.mainloop()
 
-maze = Maze(100, 100, 1000, 1000)
+maze = Maze(59, 59, 1000, 1000)
 maze.main()
 
 
