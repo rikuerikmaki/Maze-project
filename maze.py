@@ -285,7 +285,7 @@ class Maze:
         #print(maze.show())
         self.root.mainloop()
 
-maze = Maze(6, 10, 1000, 1000)
+maze = Maze(10, 10, 1000, 1000)
 maze.main()
 
 

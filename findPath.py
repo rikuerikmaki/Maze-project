@@ -21,10 +21,8 @@ def get_neighbors(i, j, rows, columns):
 def findPath(maze, start):
     q = []
     q.append(start)
-    #all_nodes = maze.get_rows() * maze.get_columns()
     rows = maze.get_rows()
     columns = maze.get_columns()
-    #visited = np.full(maze.get_rows(), maze.get_columns(), False)
     visited = []
     for i in range(rows):
         hold = []
@@ -39,11 +37,6 @@ def findPath(maze, start):
         for j in range(columns):
             hold.append([i, j])
         prev.append(hold)
-            
-        
-     #prev tulis alustaa niin, että siinä on kaikki mazen nodet
-    #indexes = list(range(0, all_nodes))
-    #hash = {k:v for k, v in zip(prev, indexes)}
 
 
     while not len(q) == 0:
@@ -59,7 +52,7 @@ def findPath(maze, start):
                 direction = "Up"
             if node[1] - next[1] == 1:
                 direction = "Down"
-            if not maze.hasWall2(next[1], next[0], direction): #ehkä pitää vaihtaa indexit ristiin
+            if not maze.hasWall2(next[1], next[0], direction):
                 if not visited[next[0]][next[1]]:
                     visited[next[0]][next[1]] = True
                     q.append(next)
@@ -73,6 +66,7 @@ def create_path(start, end, maze):
     node = end
     while node != start:
         path.append(node)
+        print(node)
         node = parents[node[0]][node[1]]
     path.append([0,0])
     print(path)
