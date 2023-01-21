@@ -5,6 +5,13 @@ import findPath as fp
 from tkinter import Tk, Canvas
 
 
+
+
+
+
+#RUN THIS PROGRAM
+
+
 class Maze:
     def __init__(self, rows, columns, width, height):
         self.root = Tk()
@@ -25,8 +32,8 @@ class Maze:
         self.thickness = 1
         self.cell_w = math.floor((self.width - self.edge) / len(self.horizontalWalls[0]))
         self.cell_h = math.floor((self.height - self.edge) / len(self.verticalWalls))
-        self.start = [0,0]
-        self.end = [self.rows - 1, self.columns - 1]
+        self.start = [0,0]                                         #SET STARTING POINT
+        self.end = [self.rows - 1, self.columns - 1]               #SET ENDING POINT
 
     def get_start(self):
         return self.start
@@ -285,7 +292,7 @@ class Maze:
         #print(maze.show())
         self.root.mainloop()
 
-maze = Maze(10, 10, 1000, 1000)
+maze = Maze(5, 5, 800, 800)             #set Maze size by setting the first two parameters.
 maze.main()
 
 

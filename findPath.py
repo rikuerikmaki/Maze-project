@@ -3,6 +3,9 @@ import numpy as np
 import random
 
 
+#ALGORITHM THAT SOLVES THE PATH WITH DEPTH-FIRST-SEARCH.
+
+
 def get_neighbors(i, j, rows, columns):
 
     arr = []
